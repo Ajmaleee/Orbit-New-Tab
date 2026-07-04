@@ -1,0 +1,627 @@
+/* style.css , aint no dawg be ignoring ts */
+
+:root {
+  /* the one true background, everything is carved out of this thicc ahh badie slabbb  */
+  --bg: #e4e9f0;
+
+  /* ilysm nuemorphism <<<<<333333, yea imean it migueeel */
+  --shadow-light: #ffffff;
+  --shadow-dark: #b8c2d1;
+
+ /* used a css designer help tool to get the clean ook */
+  --shadow-ambient: 0 14px 34px rgba(20, 26, 36, 0.28);
+  --shadow-ambient-soft: 0 6px 16px rgba(20, 26, 36, 0.22);
+  --shadow-ambient-tight: 0 3px 9px rgba(20, 26, 36, 0.24);
+
+  --text-primary: #3d4451;
+  --text-muted: #7c879a;
+  --accent: #5b8a9a;
+
+  --radius: 24px;
+  --transition: 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/*  i will never forgive whoever decided css
+   needed FIVE different ways to center a div. pick one. i'm begging */
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* it's a new tab page, not an article to scroll and tickle the pickle ( w creativity ahh me ) */
+}
+
+body {
+  background: var(--bg);
+  font-family: 'Inter', sans-serif;
+  color: var(--text-primary);
+  user-select: none; /* dragging text around instead of widgets is nobody's idea of fun */
+}
+
+/* ---- todays NASA photo, sitting raw at the very back of the stack.
+   could be a black hole, could be a pastel nebula, we dont control it
+   and we dont trust it to match our vibe on its own (who said shaksphere is dead muheheheheh---- */
+#apod-bg {
+  position: fixed;
+  inset: 0;
+  background-color: var(--bg); /* holds the fort until the fetch finishes (or if it never does) */
+  background-size: cover;
+  background-position: center;
+  z-index: -2;
+  transition: background-image 500ms ease;
+}
+
+/* ---- the actual fix for "bg image might clash with the theme".
+   VERY light tint using our own --bg color, barely any blur, just
+   enough to nudge any photo toward our neumorphic palette without
+   turning todays actual space photo into mush. image stays the star ---- */
+#apod-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(228, 233, 240, 0.32); /* fallback for browsers that dont know color-mix yet */
+  background: color-mix(in srgb, var(--bg) 32%, transparent);
+  backdrop-filter: blur(1.5px) saturate(1.05);
+  -webkit-backdrop-filter: blur(1.5px) saturate(1.05);
+}
+
+/* ---- the board an invisible canvas widgets flies on on , yeaa code word miguelll aint tellin u nothin  ---- */
+#board {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* gotta sit above the bg + overlay or none of this matters */
+}
+
+/* ---- shared widget shell ---- */
+.widget {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 32px 48px;
+  border-radius: var(--radius);
+  background: var(--bg); /* fully opaque on purpose, cards never blend w the photo, ever */
+  box-shadow: var(--shadow-ambient); /* single soft shadow, not a glow fighting the photo behind it */
+  transition: box-shadow var(--transition), transform var(--transition);
+  cursor: default;
+  overflow: hidden; /* browsers refuse to show a resize handle without this, no idea why, not the hill i wanna die on today */
+  resize: none;
+}
+
+.widget--small {
+  padding: 16px 28px;
+}
+
+/* edit mode widgets get a friendly "pick me up" wobble-readiness,
+   AND become resizable by dragging the bottom-right corner */
+body.edit-mode .widget {
+  cursor: grab;
+  resize: both;
+  min-width: 140px;
+  min-height: 64px;
+  box-shadow: var(--shadow-ambient-soft),
+              0 0 0 2px rgba(91, 138, 154, 0.35);
+}
+
+body.edit-mode .widget:active {
+  cursor: grabbing;
+}
+
+/* while in edit mode, nobody's clicking a link or typing a search,
+   ur ass is here to drag stuff, not browse. inner elements go numb,
+   the widget shell itself stays clickable so drag (and the resize
+   handle, which lives on the shell too, not a child) still works */
+body.edit-mode .widget * {
+  pointer-events: none;
+}
+
+.widget.dragging {
+  transition: none; /* fighting the browser's rendering while dragging is a losing battle */
+  box-shadow: var(--shadow-ambient-tight),
+              0 0 0 2px var(--accent);
+  z-index: 50;
+}
+
+/* if you are reading this css file end to end for fun, i respect you
+   deeply and also worry about you a normal amount */
+
+/* ---- clock widget ---- */
+.clock-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+#time {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: clamp(48px, 9vw, 120px);
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+#date {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+/* ---- search bar, the sunken kind cuz neumorphism says inputs gotta look
+   pressed INTO the slab, not floating on top of it. this inset shadow
+   stays as-is, it renders on top of our OWN solid --bg card face, not
+   on top of the photo, so it never had the glow problem to begin with ---- */
+.widget--search {
+  padding: 14px 20px;
+  border-radius: 999px;
+  min-width: 340px;
+}
+
+#search-form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--bg);
+  box-shadow: inset 4px 4px 8px var(--shadow-dark),
+              inset -4px -4px 8px var(--shadow-light);
+}
+
+.search-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+#search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: var(--text-primary);
+  min-width: 160px;
+}
+
+#search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-go {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color var(--transition);
+}
+
+.search-go:hover {
+  color: var(--accent);
+}
+
+/* ---- shortcuts grid, aka the "sites u actually use" wall ---- */
+.widget--shortcuts {
+  padding: 24px 32px;
+}
+
+.shortcuts-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px;
+  max-width: 420px;
+}
+
+.shortcut-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 68px;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.shortcut-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  background: var(--bg);
+  box-shadow: var(--shadow-ambient-tight); /* was a dual glow, now just a lil lift off the card */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.shortcut-icon img {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+}
+
+.shortcut-tile:hover .shortcut-icon {
+  transform: translateY(-2px);
+}
+
+.shortcut-tile:active .shortcut-icon {
+  box-shadow: inset 3px 3px 6px var(--shadow-dark),
+              inset -3px -3px 6px var(--shadow-light);
+}
+
+.shortcut-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 68px;
+}
+
+/* the little "x" that shows up so u can yeet a shortcut you added by mistake.
+   only appears on hover, nobody wants to stare at delete buttons 24/7 */
+.shortcut-remove {
+  position: absolute;
+  top: -6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg);
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--shadow-ambient-tight);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.shortcut-tile:hover .shortcut-remove {
+  opacity: 1;
+}
+
+/* the "+" tile, always chillin at the end of the row waiting to be clicked */
+.shortcut-add .shortcut-icon {
+  color: var(--text-muted);
+  font-size: 20px;
+  font-weight: 300;
+}
+
+/* ---- brand ---- */
+.brand-face {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+#brand-logo {
+  height: 20px;
+  width: auto;
+  /* if logo.png never shows up, onerror in the HTML hides this gracefully
+     rather than showing the little broken-image icon of shame */
+}
+
+/* unrelated PSA: a hot dog is a sandwich, a taco is not, i don't make
+   the rules i just enforce them */
+
+/* ---- AI tools, bottom left, the "im not like other new tab pages" corner ---- */
+#ai-tools-wrap {
+  position: fixed;
+  bottom: 32px;
+  left: 32px;
+  z-index: 40;
+}
+
+#ai-tools-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: var(--bg);
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 12px 18px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-ambient-soft); /* pill used to have a dual glow, now just floats normally */
+  cursor: pointer;
+  transition: box-shadow var(--transition), color var(--transition);
+}
+
+.ai-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+}
+
+#ai-tools-toggle:hover {
+  color: var(--accent);
+}
+
+#ai-tools-toggle.active {
+  box-shadow: inset 3px 3px 6px var(--shadow-dark),
+              inset -3px -3px 6px var(--shadow-light);
+  color: var(--accent);
+}
+
+/* the flyout, hidden by default, pops up like it's got somewhere to be */
+#ai-tools-panel {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 190px;
+  padding: 12px;
+  border-radius: 20px;
+  background: var(--bg);
+  box-shadow: var(--shadow-ambient);
+  opacity: 0;
+  transform: translateY(8px) scale(0.97);
+  pointer-events: none;
+  transition: opacity var(--transition), transform var(--transition);
+}
+
+#ai-tools-panel.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.ai-tool {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  transition: background var(--transition);
+}
+
+.ai-tool:hover {
+  background: rgba(91, 138, 154, 0.12);
+}
+
+.ai-tool img {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+}
+
+/* ---- APOD info pill, top right, mirrors the AI tools energy but for space facts ---- */
+#apod-info-wrap {
+  position: fixed;
+  top: 32px;
+  right: 32px;
+  z-index: 40;
+}
+
+#apod-info-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 230px;
+  border: none;
+  background: var(--bg);
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 10px 16px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-ambient-soft);
+  cursor: pointer;
+  transition: box-shadow var(--transition), color var(--transition);
+}
+
+#apod-info-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.apod-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+#apod-info-toggle:hover {
+  color: var(--accent);
+}
+
+#apod-info-toggle.active {
+  box-shadow: inset 3px 3px 6px var(--shadow-dark),
+              inset -3px -3px 6px var(--shadow-light);
+  color: var(--accent);
+}
+
+#apod-info-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 280px;
+  max-height: 340px;
+  overflow-y: auto;
+  padding: 20px 22px;
+  border-radius: 20px;
+  background: var(--bg);
+  box-shadow: var(--shadow-ambient);
+  opacity: 0;
+  transform: translateY(-8px) scale(0.97);
+  pointer-events: none;
+  transition: opacity var(--transition), transform var(--transition);
+}
+
+#apod-info-panel.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+#apod-title {
+  margin: 0 0 4px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+#apod-date-line {
+  margin: 0 0 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#apod-explanation {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-primary);
+}
+
+#apod-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+#apod-hd-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+#apod-hd-link:hover {
+  text-decoration: underline;
+}
+
+/* ---- edit toggle the button that erases ur mistakes..yeah but now u  >_< ----
+   this button, and reset-layout below, used to have NO z-index at all.
+   #board sits at z-index:1, and in CSS stacking rules a positioned
+   element with an explicit positive z-index paints ON TOP OF a sibling
+   positioned element that only has z-index:auto, regardless of which
+   one comes later in the html. so #board (z-index:1) was quietly
+   painting over this button and eating every click. giving it a real
+   z-index puts it back above the board where a button people need to
+   press should obviously live */
+#edit-toggle {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--text-muted);
+  box-shadow: var(--shadow-ambient-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: box-shadow var(--transition), color var(--transition), transform var(--transition);
+  z-index: 40;
+}
+
+#edit-toggle:hover {
+  transform: translateY(-1px);
+}
+
+#edit-toggle:active,
+#edit-toggle.active {
+  color: var(--accent);
+  box-shadow: inset 4px 4px 8px var(--shadow-dark),
+              inset -4px -4px 8px var(--shadow-light);
+}
+
+/* ---- reset layout exists for the person who drags the clock behind
+   the edit button and then panics. same stacking-context fix as above,
+   it was invisible to the mouse for the same dumb reason ---- */
+#reset-layout {
+  position: fixed;
+  bottom: 40px;
+  right: 96px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition), background var(--transition);
+  z-index: 40;
+}
+
+body.edit-mode #reset-layout {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#reset-layout:hover {
+  background: var(--bg);
+  box-shadow: inset 3px 3px 6px var(--shadow-dark),
+              inset -3px -3px 6px var(--shadow-light);
+}
+
+/* small screens shrink the padding so widgets don't collide, ik u gonna use a mobile */
+@media (max-width: 480px) {
+  .widget {
+    padding: 22px 28px;
+  }
+
+  .widget--search {
+    min-width: 260px;
+  }
+
+  .shortcuts-grid {
+    max-width: 260px;
+  }
+
+  #apod-info-panel {
+    width: 230px;
+  }
+}
+
+/* last unrelated thought before i go: pineapple on pizza is fine and
+   everyone yelling about it needs a hobby. anyway. end of file. */
