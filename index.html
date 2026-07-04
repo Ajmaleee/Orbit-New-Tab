@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>New Tab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- using two fonts ayayayay, one for flexing one for actually working  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- todays NASA pic goes here, raw. it can be ANY color on earth (or space)
+       so it never touches text directly, the overlay right after it handles that -->
+  <div id="apod-bg"></div>
+
+  <!-- the peace treaty between "random space photo" and "neumorphism".
+       frosted tint sits on top of the photo so the vibe stays consistent
+       no matter if today's pic is a black hole or a lil pink nebula -->
+  <div id="apod-overlay"></div>
+
+  <!-- Everything in here is a "widget" >V<  a little card the user can drag
+       around once edit mode is on (and now resize too, corner's yours) -->
+  <main id="board">
+
+    <!--  i still don't know how flexbox gap
+       worked before literally every browser supported it, and at
+       this point i'm too far in to ask -->
+
+    <!-- search bar, google's problem now not mine -->
+    <section class="widget widget--search" id="widget-search" data-id="search" style="top: 14%; left: 50%;">
+      <form id="search-form" action="https://www.google.com/search" target="_self">
+        <img class="search-icon" src="https://www.google.com/s2/favicons?domain=google.com&sz=32" alt="" />
+        <input type="text" name="q" id="search-input" placeholder="search the void..." autocomplete="off" />
+        <button type="submit" class="search-go" aria-label="search">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </form>
+    </section>
+
+    <section class="widget" id="widget-clock" data-id="clock" style="top: 38%; left: 50%;">
+      <div class="clock-face">
+        <span id="time">00:00</span>
+        <span id="date">Turn on yo internet lil vro -_-</span>
+      </div>
+    </section>
+
+    <!-- shortcuts, aka the "most used sites" board, populated by js down below -->
+    <section class="widget widget--shortcuts" id="widget-shortcuts" data-id="shortcuts" style="top: 63%; left: 50%;">
+      <div class="shortcuts-grid" id="shortcuts-grid">
+        <!-- tiles get injected here, chill -->
+      </div>
+    </section>
+
+    <section class="widget widget--small" id="widget-brand" data-id="brand" style="top: 90%; left: 50%;">
+      <div class="brand-face">
+        <span>made for</span>
+        <!-- logo is at root, yea im lazy i dont wanna use git submodules or whatever -->
+        <img src="logo.png" alt="logo" id="brand-logo" onerror="this.style.display='none'" />
+      </div>
+    </section>
+    
+<!-- AGHGHGHHHHGVGYSJBVUJYGNVGVSJNYGV IM SOO FCKIN TIREDDDDD!!!!!!! -->
+  </main>
+
+  <!-- AI tools, tucked bottom left cuz thats the "hub" corner apparently -->
+  <div id="ai-tools-wrap">
+    <button id="ai-tools-toggle">
+      <span class="ai-dot"></span> AI tools
+    </button>
+    <div id="ai-tools-panel">
+      <a class="ai-tool" href="https://chat.openai.com" target="_blank" rel="noopener">
+        <img src="https://www.google.com/s2/favicons?domain=chat.openai.com&sz=32" alt="" /><span>ChatGPT</span>
+      </a>
+      <a class="ai-tool" href="https://claude.ai" target="_blank" rel="noopener">
+        <img src="https://www.google.com/s2/favicons?domain=claude.ai&sz=32" alt="" /><span>Claude</span>
+      </a>
+      <a class="ai-tool" href="https://gemini.google.com" target="_blank" rel="noopener">
+        <img src="https://www.google.com/s2/favicons?domain=gemini.google.com&sz=32" alt="" /><span>Gemini</span>
+      </a>
+      <a class="ai-tool" href="https://chat.deepseek.com" target="_blank" rel="noopener">
+        <img src="https://www.google.com/s2/favicons?domain=deepseek.com&sz=32" alt="" /><span>DeepSeek</span>
+      </a>
+      <a class="ai-tool" href="https://grok.com" target="_blank" rel="noopener">
+        <img src="https://www.google.com/s2/favicons?domain=grok.com&sz=32" alt="" /><span>Grok</span>
+      </a>
+      <a class="ai-tool" href="https://www.perplexity.ai" target="_blank" rel="noopener">
+        <img src="https://www.google.com/s2/favicons?domain=perplexity.ai&sz=32" alt="" /><span>Perplexity</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- top right, the "wait what am i even looking at" button -->
+  <div id="apod-info-wrap">
+    <button id="apod-info-toggle">
+      <span class="apod-dot"></span> <span id="apod-info-label">loading today's pic...</span>
+    </button>
+    <div id="apod-info-panel">
+      <h3 id="apod-title">—</h3>
+      <p id="apod-date-line">—</p>
+      <p id="apod-explanation">fetching the cosmic details, hold up...</p>
+      <div id="apod-meta-row">
+        <span id="apod-copyright"></span>
+        <a id="apod-hd-link" href="#" target="_blank" rel="noopener" style="display:none;">view full res ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- edit button couz y not -_- , see style.css for why this was
+       secretly unclickable this whole time (if im wrong correct yourself  ~larry the cat) -->
+  <button id="edit-toggle" title="Rearrange (and now resize) your stuff">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+    </svg>
+  </button>
+
+  <!-- reset button, couz ik u dumb ahh will destroy the layout -->
+  <button id="reset-layout" title="Put everything back where it belongs">Reset layout</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
