@@ -8,7 +8,6 @@
   --shadow-light: #ffffff;
   --shadow-dark: #b8c2d1;
 
- /* used a css designer help tool to get the clean ook */
   --shadow-ambient: 0 14px 34px rgba(20, 26, 36, 0.28);
   --shadow-ambient-soft: 0 6px 16px rgba(20, 26, 36, 0.22);
   --shadow-ambient-tight: 0 3px 9px rgba(20, 26, 36, 0.24);
@@ -33,7 +32,7 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden; /* it's a new tab page, not an article to scroll and tickle the pickle ( w creativity ahh me ) */
+  overflow: hidden; /* it's a new tab page, not an article to scroll and tickle  yo pickle( w creativity ahh me ) */
 }
 
 body {
@@ -45,7 +44,7 @@ body {
 
 /* ---- todays NASA photo, sitting raw at the very back of the stack.
    could be a black hole, could be a pastel nebula, we dont control it
-   and we dont trust it to match our vibe on its own (who said shaksphere is dead muheheheheh---- */
+   and we dont trust it to match our vibe on its own ---- */
 #apod-bg {
   position: fixed;
   inset: 0;
@@ -56,18 +55,15 @@ body {
   transition: background-image 500ms ease;
 }
 
-/* ---- the actual fix for "bg image might clash with the theme".
-   VERY light tint using our own --bg color, barely any blur, just
-   enough to nudge any photo toward our neumorphic palette without
-   turning todays actual space photo into mush. image stays the star ---- */
+/* ---- jus a lil ,tint,not too much,not too less :3 ---- */
 #apod-overlay {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: rgba(228, 233, 240, 0.32); /* fallback for browsers that dont know color-mix yet */
-  background: color-mix(in srgb, var(--bg) 32%, transparent);
-  backdrop-filter: blur(1.5px) saturate(1.05);
-  -webkit-backdrop-filter: blur(1.5px) saturate(1.05);
+  background: rgba(228, 233, 240, 0.15); /* fallback for browsers that dont know color-mix yet */
+  background: color-mix(in srgb, var(--bg) 15%, transparent);
+  backdrop-filter: blur(0.5px) saturate(1.05);
+  -webkit-backdrop-filter: blur(0.5px) saturate(1.05);
 }
 
 /* ---- the board an invisible canvas widgets flies on on , yeaa code word miguelll aint tellin u nothin  ---- */
