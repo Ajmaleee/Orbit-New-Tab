@@ -4,8 +4,8 @@ const LAYOUT_KEY = "newtab-layout-v1";
 const SHORTCUTS_KEY = "newtab-shortcuts-v1";
 const APOD_CACHE_KEY = "newtab-apod-cache-v1";
 
-// yea this is sitting in plain text, anyone who opens devtools can see it.
-// if ur reading ts, congrats,i have nothing to say
+// yea this is sitting in plain text, anyone who opens devtools can see it.if yo seets, your a nerd
+
 const APOD_API_KEY = "OsV2xalMFxC9KVUYekeO1pgWKiLp2qJr4V2WWof0";
 
 
@@ -34,7 +34,7 @@ tickClock();
 // but the day WILL eventually change and someone has to notice
 setInterval(tickClock, 1000);
 
-// unrelated but i will die on this hill: cereal is soup and nobody
+//  cereal is soup and nobody
 // can convince me otherwise, moving on
 
 
@@ -367,12 +367,26 @@ function truncate(str, len) {
 }
 
 function applyAPOD(data) {
-  // images set the bg directly. videos dont have a photo, so we use NASA's
-  // own thumbnail if they gave us one (thumbs=true in the request below)
-  const imageUrl = data.media_type === "image" ? (data.hdurl || data.url) : data.thumbnail_url;
+  // this right here was the actual reason the bg felt slow: hdurl is
+  // NASA's original, uncompressed-ish resolution and can be several MB.
+  // `url` is a much smaller pre-sized version meant for exactly this
+  // kind of display use. swapped the priority so the bg loads off the
+  // small one, hdurl now only gets used by the "view full res" link
+  // for people who actually want to wait for the giant version
+  const imageUrl = data.media_type === "image" ? (data.url || data.hdurl) : data.thumbnail_url;
 
   if (imageUrl) {
-    apodBg.style.backgroundImage = `url("${imageUrl}")`;
+    // preload off-DOM first so the css background only swaps once the
+    // file is fully downloaded, instead of potentially painting a
+    // half-loaded image for a moment
+    const preload = new Image();
+    preload.onload = () => {
+      apodBg.style.backgroundImage = `url("${imageUrl}")`;
+    };
+    preload.onerror = () => {
+      apodBg.style.backgroundImage = `url("${imageUrl}")`; // let the browser sort it out either way
+    };
+    preload.src = imageUrl;
   }
   // no imageUrl (rare, video w/ no thumbnail)? #apod-bg just keeps its
   // solid --bg color, nobody's the wiser
