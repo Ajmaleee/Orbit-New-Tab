@@ -4,34 +4,39 @@
   <meta charset="UTF-8" />
   <title>New Tab</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- using two fonts ayayayay, one for flexing one for actually working  -->
+<!-- using two fonts ayayayay, one for flexing  one for actually working  -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-
-  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://api.nasa.gov" />
+  <link rel="preconnect" href="https://apod.nasa.gov" crossorigin />
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- todays NASA pic goes here, raw. it can be ANY color on earth (or space)
-       so it never touches text directly, the overlay right after it handles that -->
+  <!-- todays NASA pic goes here, raw. -->
   <div id="apod-bg"></div>
 
-  <!-- the peace treaty between "random space photo" and "neumorphism".
-       frosted tint sits on top of the photo so the vibe stays consistent
-       no matter if today's pic is a black hole or a lil pink nebula -->
+  <!-- the peace treaty between "random space photo" and "neumorphism" -->
   <div id="apod-overlay"></div>
 
-  <!-- Everything in here is a "widget" >V<  a little card the user can drag
-       around once edit mode is on (and now resize too, corner's yours) -->
+  
   <main id="board">
 
-    <!--  i still don't know how flexbox gap
+    <!-- i still don't know how flexbox gap
        worked before literally every browser supported it, and at
        this point i'm too far in to ask -->
 
+ 
+
+    <section class="widget" id="widget-clock" data-id="clock" style="top: 13%; left: 50%;">
+      <div class="clock-face">
+        <span id="time">00:00</span>
+        <span id="date">Turn on yo internet lil vro -_-</span>
+      </div>
+    </section>
+
     <!-- search bar, google's problem now not mine -->
-    <section class="widget widget--search" id="widget-search" data-id="search" style="top: 14%; left: 50%;">
+    <section class="widget widget--search" id="widget-search" data-id="search" style="top: 35%; left: 50%;">
       <form id="search-form" action="https://www.google.com/search" target="_self">
         <img class="search-icon" src="https://www.google.com/s2/favicons?domain=google.com&sz=32" alt="" />
         <input type="text" name="q" id="search-input" placeholder="search the void..." autocomplete="off" />
@@ -41,29 +46,21 @@
       </form>
     </section>
 
-    <section class="widget" id="widget-clock" data-id="clock" style="top: 38%; left: 50%;">
-      <div class="clock-face">
-        <span id="time">00:00</span>
-        <span id="date">Turn on yo internet lil vro -_-</span>
-      </div>
-    </section>
-
     <!-- shortcuts, aka the "most used sites" board, populated by js down below -->
-    <section class="widget widget--shortcuts" id="widget-shortcuts" data-id="shortcuts" style="top: 63%; left: 50%;">
+    <section class="widget widget--shortcuts" id="widget-shortcuts" data-id="shortcuts" style="top: 49%; left: 50%;">
       <div class="shortcuts-grid" id="shortcuts-grid">
         <!-- tiles get injected here, chill -->
       </div>
     </section>
 
-    <section class="widget widget--small" id="widget-brand" data-id="brand" style="top: 90%; left: 50%;">
+    <section class="widget widget--small" id="widget-brand" data-id="brand" style="top: 94%; left: 50%;">
       <div class="brand-face">
         <span>made for</span>
         <!-- logo is at root, yea im lazy i dont wanna use git submodules or whatever -->
         <img src="logo.png" alt="logo" id="brand-logo" onerror="this.style.display='none'" />
       </div>
     </section>
-    
-<!-- AGHGHGHHHHGVGYSJBVUJYGNVGVSJNYGV IM SOO FCKIN TIREDDDDD!!!!!!! -->
+
   </main>
 
   <!-- AI tools, tucked bottom left cuz thats the "hub" corner apparently -->
@@ -110,7 +107,7 @@
   </div>
 
   <!-- edit button couz y not -_- , see style.css for why this was
-       secretly unclickable this whole time (if im wrong correct yourself  ~larry the cat) -->
+       secretly unclickable this whole time (it wasn't your fault) -->
   <button id="edit-toggle" title="Rearrange (and now resize) your stuff">
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
