@@ -61,8 +61,8 @@ body {
   z-index: -1;
   background: rgba(228, 233, 240, 0.15); /* fallback for browsers that dont know color-mix yet */
   background: color-mix(in srgb, var(--bg) 15%, transparent);
-  backdrop-filter: blur(0.5px) saturate(1.05);
-  -webkit-backdrop-filter: blur(0.5px) saturate(1.05);
+  backdrop-filter: blur(0px) saturate(1.05);
+  -webkit-backdrop-filter: blur(0px) saturate(1.05);
 }
 
 /* ---- the board an invisible canvas widgets flies on on , yeaa code word miguelll aint tellin u nothin  ---- */
