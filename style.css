@@ -8,6 +8,7 @@
   --shadow-light: #ffffff;
   --shadow-dark: #b8c2d1;
 
+
   --shadow-ambient: 0 14px 34px rgba(20, 26, 36, 0.28);
   --shadow-ambient-soft: 0 6px 16px rgba(20, 26, 36, 0.22);
   --shadow-ambient-tight: 0 3px 9px rgba(20, 26, 36, 0.24);
@@ -20,7 +21,7 @@
   --transition: 220ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/*  i will never forgive whoever decided css
+/*  but i will never forgive whoever decided css
    needed FIVE different ways to center a div. pick one. i'm begging */
 
 * {
@@ -32,7 +33,7 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden; /* it's a new tab page, not an article to scroll and tickle  yo pickle( w creativity ahh me ) */
+  overflow: hidden; /* it's a new tab page, not an article to scroll and tickle  ( w creativity ahh me ) */
 }
 
 body {
@@ -42,9 +43,7 @@ body {
   user-select: none; /* dragging text around instead of widgets is nobody's idea of fun */
 }
 
-/* ---- todays NASA photo, sitting raw at the very back of the stack.
-   could be a black hole, could be a pastel nebula, we dont control it
-   and we dont trust it to match our vibe on its own ---- */
+
 #apod-bg {
   position: fixed;
   inset: 0;
@@ -55,7 +54,7 @@ body {
   transition: background-image 500ms ease;
 }
 
-/* ---- jus a lil ,tint,not too much,not too less :3 ---- */
+
 #apod-overlay {
   position: fixed;
   inset: 0;
@@ -157,7 +156,10 @@ body.edit-mode .widget * {
 .widget--search {
   padding: 14px 20px;
   border-radius: 999px;
-  min-width: 340px;
+  /* was a flat 340px min-width, way narrower than the reference pic.
+     clamp() so it scales with viewport instead of being one fixed
+     number: 420px floor, 680px ceiling, 45vw in between */
+  width: clamp(420px, 45vw, 680px);
 }
 
 #search-form {
@@ -607,7 +609,7 @@ body.edit-mode #reset-layout {
   }
 
   .widget--search {
-    min-width: 260px;
+    width: 90vw;
   }
 
   .shortcuts-grid {
